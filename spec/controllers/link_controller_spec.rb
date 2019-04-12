@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 describe LinkController do
-  let!(:link) { create(:link) }
+  let!(:link) { create(:link, :with_visits) }
+
+  def json_response 
+    JSON.parse(response.body)
+  end
 
   describe 'POST #create' do
     let(:valid_attributes) { 
@@ -35,14 +39,14 @@ describe LinkController do
 
   describe 'POST #custom' do
     it 'creates a custom url' do
-      post :custom, 
-        params: 
-        { 
+      post :custom,
+        params:
+        {
           body: Faker::Internet.url, 
           slug: 'my-custom-url'
         }
-      expect(JSON.parse(response.body)['slug']).to eq 'my-custom-url'
-      expect(JSON.parse(response.body)['full_link']).to eq 'http://test.host/my-custom-url'
+      expect(json_response['slug']).to eq 'my-custom-url'
+      expect(json_response['full_link']).to eq 'http://test.host/my-custom-url'
     end
   end
 
@@ -50,6 +54,23 @@ describe LinkController do
     it 'redirects short links to the original url' do
       get 'show', params: { slug: link.slug }
       expect(response).to redirect_to link.body
+    end
+  end
+
+  describe 'GET #stats' do
+    before { post :index, params: { slug: link.slug }}
+
+    it 'provides the date the link was created' do
+      expect(json_response['created_at']).to be_present
+    end
+
+    it 'provides the total visits to that link' do
+      expect(json_response['total_visits']).to be_present
+      expect(json_response['total_visits']).to eq 20
+    end
+
+    it 'provides a hash of visits per day' do
+      expect(json_response['visits_per_day']).to be_present
     end
   end
 end
