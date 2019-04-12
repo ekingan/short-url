@@ -16,7 +16,7 @@ The endpoints include:
 
 #### Setup
 
-To run this app locally you will need to have Ruby and PostgreSQL installed. If you need guidance getting your environment set up, there is a pretty great tutorial here: http://railsapps.github.io/installrubyonrails-mac.html
+To run this app locally you will need to have Ruby and PostgreSQL installed. If you need guidance getting your environment set up, there is a great tutorial here: http://railsapps.github.io/installrubyonrails-mac.html
 
 1. clone repo
 2. bundle install
@@ -74,11 +74,13 @@ Your response should show you when the link was created, how many total visits t
 
 #### Running tests
 
-To run the full test suite simply type `rspec` in your CLI.
+To run the full test suite simply type the command `rspec` in your CLI.
 
 #### Still more todo:
 If I spent more time on this I would focus on:
 1. better error handling
 2. more tests
 3. better validations (ie uniqueness)
-3. creating a nice UI to interact with the API
+4. creating a nice UI to interact with the API
+5. I would have the stats endpoint use the `full_link` attribute for reasons of uniqueness
+
