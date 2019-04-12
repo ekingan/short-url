@@ -1,13 +1,9 @@
 class Link < ApplicationRecord
-  validates :body, presence: true
+  validates_presence_of :body
   validates :body, format: { with: URI::DEFAULT_PARSER.make_regexp, message: 'Valid URL required' }
-  validates :slug, uniqueness: true
+  validates_uniqueness_of :full_link, message: 'This URL is already taken, please choose a different one'
 
-  before_create :generate_slug, :generate_full_link
- 
-  def generate_slug
-    self.slug = SecureRandom.urlsafe_base64(6) unless self.slug.present?
-  end
+  before_create :generate_full_link
 
   def generate_full_link
     self.full_link = "#{base_url}/#{slug}"

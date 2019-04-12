@@ -5,7 +5,7 @@ describe LinkController do
 
   describe 'POST #create' do
     let(:valid_attributes) { 
-      { body: Faker::Internet.url, base_url: 'http://www.localhost:3000' }
+      { body: Faker::Internet.url }
     }
 
     before { post :create, params: valid_attributes }
@@ -31,7 +31,19 @@ describe LinkController do
       post :create, params: valid_attributes
       expect(response.body['slug']).to eq shortened
     end
+  end
 
+  describe 'POST #custom' do
+    it 'creates a custom url' do
+      post :custom, 
+        params: 
+        { 
+          body: Faker::Internet.url, 
+          slug: 'my-custom-url'
+        }
+      expect(JSON.parse(response.body)['slug']).to eq 'my-custom-url'
+      expect(JSON.parse(response.body)['full_link']).to eq 'http://test.host/my-custom-url'
+    end
   end
 
   describe 'GET #show' do
